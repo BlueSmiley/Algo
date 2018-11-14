@@ -1,0 +1,184 @@
+import org.junit.Test;
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+
+//-------------------------------------------------------------------------
+/**
+ *  Test class for Collinear.java
+ *
+ *  @author  
+ *  @version 03/10/16 17:10:35
+ */
+@RunWith(JUnit4.class)
+public class CollinearTest
+{
+    //~ Constructor ........................................................
+    @Test
+    public void testConstructor()
+    {
+      new Collinear();
+    }
+
+    //~ Public Methods ........................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Check that the two methods work for empty arrays
+     */
+    @Test
+    public void testEmpty()
+    {
+        int expectedResult = 0;
+
+        assertEquals("countCollinear failed with 3 empty arrays",       expectedResult, Collinear.countCollinear(new int[0], new int[0], new int[0]));
+        assertEquals("countCollinearFast failed with 3 empty arrays", expectedResult, Collinear.countCollinearFast(new int[0], new int[0], new int[0]));
+    }
+
+    // ----------------------------------------------------------
+    /**
+     * Check for no false positives in a single-element array
+     */
+    @Test
+    public void testSingleFalse()
+    {
+        int[] a3 = { 15 };
+        int[] a2 = { 5 };
+        int[] a1 = { 10 };
+
+        int expectedResult = 0;
+
+        assertEquals("countCollinear({10}, {5}, {15})",       expectedResult, Collinear.countCollinear(a1, a2, a3) );
+        assertEquals("countCollinearFast({10}, {5}, {15})", expectedResult, Collinear.countCollinearFast(a1, a2, a3) );
+    }
+
+    // ----------------------------------------------------------
+    /**
+     * Check for no false positives in a single-element array
+     */
+    @Test
+    public void testSingleTrue()
+    {
+        int[] a3 = { 15, 5 };       int[] a2 = { 5 };       int[] a1 = { 10, 15, 5 };
+
+        int expectedResult = 1;
+
+        assertEquals("countCollinear(" + Arrays.toString(a1) + "," + Arrays.toString(a2) + "," + Arrays.toString(a3) + ")",     expectedResult, Collinear.countCollinear(a1, a2, a3));
+        assertEquals("countCollinearFast(" + Arrays.toString(a1) + "," + Arrays.toString(a2) + "," + Arrays.toString(a3) + ")", expectedResult, Collinear.countCollinearFast(a1, a2, a3));
+    }
+
+
+    // TODO: add more tests here. Each line of code and ech decision in Collinear.java should
+    // be executed at least once from at least one test.
+
+    // ----------------------------------------------------------
+    @Test
+    public void testSortCorrect()
+    {
+    	int[] a1 = {11, 200, 41, 9, 10, 6};
+    	int[] sa1 = {6,9,10,11,41,200};
+    	Collinear.sort(a1);
+    	assertTrue("sort value check " + Arrays.toString(a1),Arrays.equals(a1, sa1));
+    	
+    	
+
+    }
+    
+    @Test
+    public void testBinarySearchTrue()
+    {
+    	int[] a1 = {0,5,10,15};		int[] a2 = {0,3,5,10,15};
+    	
+    	assertTrue("Test true:Collinear.binarySearch(" + Arrays.toString(a1) + ",15)",Collinear.binarySearch(a1, 15));
+    	assertTrue("Test true:Collinear.binarySearch(" + Arrays.toString(a2) + ",15)",Collinear.binarySearch(a2, 15));
+    	
+    	assertTrue("Test true:Collinear.binarySearch(" + Arrays.toString(a1) + ",5)",Collinear.binarySearch(a1, 5));
+    	assertTrue("Test true:Collinear.binarySearch(" + Arrays.toString(a2) + ",5)",Collinear.binarySearch(a2, 5));
+    	
+    	assertTrue("Test true:Collinear.binarySearch(" + Arrays.toString(a1) + ",5)",Collinear.binarySearch(a1, 0));
+    	assertTrue("Test true:Collinear.binarySearch(" + Arrays.toString(a2) + ",5)",Collinear.binarySearch(a2, 0));
+    }
+    
+    @Test
+    public void testBinarySearchFalse()
+    {
+    	int[] a1 = {0,5,10,15};		int[] a2 = {0,3,5,10,15};
+    	assertFalse("Test false:Collinear.binarySearch(" + Arrays.toString(a1) + ",7)",
+    			Collinear.binarySearch(a1, 7));
+    	assertFalse("Test false:Collinear.binarySearch(" + Arrays.toString(a2) + ",7)",
+    			Collinear.binarySearch(a2, 7));
+    	
+    }
+    
+    @Test
+    public void testSingleBinaryTrue()
+    {
+    	int[] a1 = {15};
+    	assertTrue("Test for single array true:Collinear.binarySearch(" + Arrays.toString(a1) + ",15)",
+    			Collinear.binarySearch(a1, 15));
+    }
+    
+    @Test
+    public void testSingleBinaryFalse()
+    {
+    	int[] a1 = {15};
+    	assertFalse("Test for single array false:Collinear.binarySearch(" + Arrays.toString(a1) + ",15)",
+    			Collinear.binarySearch(a1, 7));
+    }
+    
+    @Test
+    public void testSortEfficent()
+    {
+    	int[] a = {15,5,10,20};
+    	for(int i=1;i<a.length;i++)
+    	{
+    		int k = i-1;
+    		for(;k>=0 && k<i && a[i]<a[k];k--);
+    		k++;
+    		int replacement = a[i];
+    		while(k<=i)
+    		{
+    			int next = a[k];
+    			a[k] = replacement;
+    			k++;
+    			replacement = next;
+    		}
+    		switch(i)
+    		{
+    		case 0:
+    			assertTrue("sort value check 1" + Arrays.toString(a),
+    					Arrays.equals(a, new int[]{5,15,10,20}));
+    			break;
+    		case 1:
+    			assertTrue("sort value check 2" + Arrays.toString(a),
+    					Arrays.equals(a, new int[]{5,10,15,20}));
+    			break;
+    		case 2:
+    			assertTrue("sort value check 3" + Arrays.toString(a),
+    					Arrays.equals(a, new int[]{5,10,15,20}));
+    			break;
+    		default:
+    			break;
+    		}
+    	}
+    }
+    /**
+     *  Main Method.
+     *  Use this main method to create the experiments needed to answer the experimental performance questions of this assignment.
+     *
+     *  You should read the lecture notes and/or book to understand how to correctly implement the main methods.
+     *  You can use any of the provided classes to read from files, and time your code.
+     *
+     */
+     public static void main(String[] args)
+     {
+       //TODO: implement this method
+     }
+
+}
+
+

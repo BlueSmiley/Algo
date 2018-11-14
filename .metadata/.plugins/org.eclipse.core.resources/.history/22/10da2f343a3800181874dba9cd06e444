@@ -1,0 +1,19 @@
+import org.junit.Test;
+
+public class CompetitionTests {
+
+    @Test
+    public void testDijkstraConstructor() {
+    	CompetitionDijkstra graph = new CompetitionDijkstra("./src/tinyEWD",50,60,70);
+    	System.out.println(graph.timeRequiredforCompetition());
+        //TODO
+    }
+
+    @Test
+    public void testFWConstructor() {
+        //TODO
+    }
+
+    //TODO - more tests
+    
+}

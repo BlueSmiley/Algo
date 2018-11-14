@@ -1,0 +1,77 @@
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+//-------------------------------------------------------------------------
+/**
+ *  Test class for SortComparison.java
+ *
+ *  @author
+ *  @version HT 2018
+ */
+@RunWith(JUnit4.class)
+public class SortComparisonTest
+{
+    //~ Constructor ........................................................
+    @Test
+    public void testConstructor()
+    {
+        new SortComparison();
+    }
+
+    //~ Public Methods ........................................................
+
+    // ----------------------------------------------------------
+    /**
+     * Check that the methods work for empty arrays
+     */
+    @Test
+    public void testEmpty()
+    {
+    }
+
+    @Test
+    public void test10()
+    {
+    	double a[] = {0,5,14,26.0,1.5,43,9,5,26,7};
+    	double sortedA[] = {0,1.5,5,5,7,9,14,26,26,43};
+    	SortComparison.insertionSort(a);
+    	assertTrue(Arrays.toString(sortedA).equals(Arrays.toString(a)));
+    	
+    	a = new double[]{0,5,14,26.0,1.5,43,9,5,26,7};
+    	SortComparison.bubbleSort(a);
+    	assertTrue(Arrays.toString(sortedA).equals(Arrays.toString(a)));
+    	
+    	a = new double[]{0,5,14,26.0,1.5,43,9,5,26,7};
+    	SortComparison.selectionSort(a);
+    	assertTrue(Arrays.toString(sortedA).equals(Arrays.toString(a)));
+    	
+    	a = new double[]{0,5,14,26.0,1.5,43,9,5,26,7};
+    	SortComparison.shellSort(a);
+    	assertTrue(Arrays.toString(sortedA).equals(Arrays.toString(a)));
+    	
+    	a = new double[]{0,5,14,26.0,1.5,43,9,5,26,7};
+    	SortComparison.mergeSort(a);
+    	assertTrue(Arrays.toString(sortedA).equals(Arrays.toString(a)));
+    }
+    // TODO: add more tests here. Each line of code and ech decision in Collinear.java should
+    // be executed at least once from at least one test.
+
+    // ----------------------------------------------------------
+    /**
+     *  Main Method.
+     *  Use this main method to create the experiments needed to answer the experimental performance questions of this assignment.
+     *
+     */
+    public static void main(String[] args)
+    {
+        //TODO: implement this method
+    }
+
+}
+

@@ -1,0 +1,210 @@
+
+import java.util.LinkedList;
+
+
+public class TST<Value> {
+
+  /*
+   * Bus Service Questions:
+   * 1. How many unique destinations is there in the file?
+   *    //171
+   * 2. Is there a bus going to the destination "SOUTHSIDE"?
+   *    //No/null
+   * 3. How many records is there about the buses going to the destination beginning with "DOWN"?
+   *    //1
+   *
+   * Google Books Common Words Questions:
+   * 4. How many words is there in the file?
+   *    //TODO
+   * 5. What is the frequency of the word "ALGORITHM"?
+   *    //TODO
+   * 6. Is the word "EMOJI" present?
+   *   //TODO
+   * 7. IS the word "BLAH" present?
+   *   //TODO
+   * 8. How many words are there that start with "TEST"?
+   *    //TODO
+   */
+
+	
+  private static class TrieNode<Value> {
+		private char c;                        // character
+        private TrieNode<Value> left, mid, right;  // left, middle, and right subtries
+        private Value val;                     // value associated with string
+  }
+
+  /* a pointer to the start of your trie */
+  private TrieNode<Value> root = new TrieNode<Value>();
+
+  /*
+   * Returns the number of words in the trie
+   */
+  public int size() {
+	return size(root,0);
+  }
+  
+  private int size(TrieNode<Value> node,int count)
+  {
+	  if(node == null )
+		  return count;
+	  else
+	  {
+		  if(node.val != null)
+			  count++;
+		  count = size(node.left,count);
+		  count = size(node.mid,count);
+		  count = size(node.right,count);
+	  }
+	  return count;
+  }
+
+  /*
+   * returns true if the word is in the trie, false otherwise
+   */
+  public boolean contains(String key) {
+	  if(get(key)==null)
+		  return false;
+	  else
+		  return true;
+  }
+
+  /*
+   * return the value stored in a node with a given key, returns null if word is not in trie
+   */
+  public Value get(String key) {
+	if(key.length()<=0)
+		return null;
+    return get(root,key,0);
+  }
+  
+  private Value get(TrieNode<Value> node,String key,int current){
+	  char c = key.charAt(current);
+	  if(node == null)
+		  return null;
+	  if(node.c == c)
+	  {
+		  current++;
+		  if(current >= key.length())
+		  {
+			  return node.val;
+		  }
+		  else
+		  {
+			  return get(node.mid,key,current);
+		  }
+	  }
+	  else if(c < node.c)
+	  {
+		  return get(node.left,key,current);
+	  }
+	  else
+		  return get(node.right,key,current);
+  }
+
+  /*
+   * stores the Value val in the node with the given key
+   */
+  public void put(String key, Value val) 
+  {
+	if(key.length() <= 0)
+		  return;
+	if(root.mid == null && root.left == null && root.right == null && root.c == 0)
+	{
+		root.c = key.charAt(0);
+	}
+    put(root,key,val,0);
+  }
+  
+  private TrieNode<Value> put(TrieNode<Value> node,String key,Value val,int current)
+  {
+	  char c = key.charAt(current);
+	  if(node == null)
+	  {
+		  node = new TrieNode<Value>();
+		  node.c = c;
+	  }
+	  if(node.c == c)
+	  {
+		  current++;
+		  if(current == key.length())
+		  {
+			  node.val = val;
+		  }
+		  else
+		  {
+			  node.mid = put(node.mid,key,val,current);
+		  }
+	  }
+	  else if(c < node.c)
+	  {
+		  node.left = put(node.left,key,val,current);
+	  }
+	  else
+	  {
+		  node.right = put(node.right,key,val,current);
+	  }
+	  return node;
+		  
+  }
+
+  /*
+   * returns the linked list containing all the keys present in the trie
+   * that start with the prefix passes as a parameter, sorted in alphabetical order
+   */
+  public LinkedList<String> keysWithPrefix(String prefix) 
+  {
+	  LinkedList<String> strings = new LinkedList<String>();
+	  keysWithPrefix(prefix,root,strings,0);
+	  return strings;
+  }
+  
+  private TrieNode<Value> keysWithPrefix(String prefix,TrieNode<Value> node,LinkedList<String> strings,int current)
+  {
+	  if(prefix.length() <= 0)
+	  {
+		  allSuffixes(prefix,strings,node);
+		  return node;
+	  }
+	  char c = prefix.charAt(current);
+	  if(node!= null)
+	  {
+		  if(node.c == c)
+		  {
+			  current++; 
+			  if(current >= prefix.length())
+			  {
+				  if(node.val!=null)
+					  strings.add(prefix);
+				  allSuffixes(prefix,strings,node.mid);
+			  }
+			  else
+				  node.mid = keysWithPrefix(prefix,node.mid,strings,current);
+		  }
+		  else if(c < node.c)
+		  {
+			  node.left = keysWithPrefix(prefix,node.left,strings,current);
+		  }
+		  else
+		  {
+			  node.right = keysWithPrefix(prefix,node.right,strings,current);
+		  }
+	  }
+	  return node;
+  }
+  
+  private void allSuffixes(String prefix,LinkedList<String> strings,TrieNode<Value> node)
+  {
+	  if(node == null)
+		  return;
+	  else
+	  {
+		  allSuffixes(prefix,strings,node.left);
+		  if(node.val != null)
+		  {
+			  strings.add(prefix+node.c);
+		  }
+		  allSuffixes(prefix+node.c,strings,node.mid);
+		  allSuffixes(prefix,strings,node.right);
+	  }
+  }
+}
